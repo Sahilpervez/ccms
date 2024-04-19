@@ -7,6 +7,7 @@ import 'package:ccms/src/feature/auth/views/set_password_screen.dart';
 import 'package:ccms/src/feature/auth/views/verify_email_screen.dart';
 import 'package:ccms/src/feature/home/view/home.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -43,10 +44,14 @@ class AuthController extends StateNotifier<bool> {
       _authRepo
           .registerEnrollmentNumber(enrollmentNumber: result)
           .then((response) {
-            print("REACHED HERE !!");
+            if (kDebugMode) {
+              print("REACHED HERE !!");
+            }
         if (response != null) {
           final res = jsonDecode(response.body);
-          print("RESPONSE = $res");
+          if (kDebugMode) {
+            print("RESPONSE = $res");
+          }
           final otpSentSuccess = res['success'];
           if (otpSentSuccess != null && otpSentSuccess == true) {
             if (res["body"]["message"] == "Signup") {
@@ -84,6 +89,21 @@ class AuthController extends StateNotifier<bool> {
           }
         }
       });
+      // SIMULATION
+
+          if(enrollmentNumber == "21/11/EC/056"){
+            state = false;
+              context.go(LoginScreen.routePath,extra: {
+                "email" : "alamsa48_soe@jnu.ac.in"
+              });
+          }else{
+            state = false;
+            context.push(EnrollmentDetailsScreen.routePath, extra: {
+              "enrollment_number": enrollmentNumber,
+              "name": "John Doe",
+            });
+          }
+
       // context.push(EnrollmentDetailsScreen.routePath, extra: {
       //   "enrollment_number": enrollmentNumber,
       //   "name": "Alam Sahilpervez"
@@ -144,6 +164,9 @@ class AuthController extends StateNotifier<bool> {
         }
       }else{
         state = false;
+        context.go(SetPasswordScreen.routePath, extra: {
+          "email": email,
+        });
         print("NAVIGATE");
       }
     });
@@ -249,7 +272,8 @@ class AuthController extends StateNotifier<bool> {
 
 
           // Failure occured
-          SnackBarService.showSnackBar(context: context, message: SnackBarMessages.loginFailure);
+          // SnackBarService.showSnackBar(context: context, message: SnackBarMessages.loginFailure);
+          
           state = false;
           return;
         }
