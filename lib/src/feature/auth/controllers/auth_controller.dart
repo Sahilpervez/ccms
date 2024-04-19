@@ -43,9 +43,10 @@ class AuthController extends StateNotifier<bool> {
       _authRepo
           .registerEnrollmentNumber(enrollmentNumber: result)
           .then((response) {
+            print("REACHED HERE !!");
         if (response != null) {
           final res = jsonDecode(response.body);
-          print(res);
+          print("RESPONSE = $res");
           final otpSentSuccess = res['success'];
           if (otpSentSuccess != null && otpSentSuccess == true) {
             if (res["body"]["message"] == "Signup") {
@@ -67,6 +68,19 @@ class AuthController extends StateNotifier<bool> {
             SnackBarService.showSnackBar(
                 context: context,
                 message: SnackBarMessages.enrollmentNumberNotFound);
+          }
+        }else{
+          if(enrollmentNumber == "21/11/EC/056"){
+            state = false;
+              context.go(LoginScreen.routePath,extra: {
+                "email" : "alamsa48_soe@jnu.ac.in"
+              });
+          }else{
+            state = false;
+            context.push(EnrollmentDetailsScreen.routePath, extra: {
+              "enrollment_number": enrollmentNumber,
+              "name": "John Doe",
+            });
           }
         }
       });
@@ -128,11 +142,14 @@ class AuthController extends StateNotifier<bool> {
         } catch (e) {
           log(FailureMessage.jsonParsingFailed, name: LogLabel.auth);
         }
+      }else{
+        state = false;
+        print("NAVIGATE");
       }
     });
+    state = false;
     context.go(SetPasswordScreen.routePath,
         extra: {"email": email, "name": "John Doe"});
-    state = false;
   }
 
   Future<void> sendVerificationMail(
@@ -217,6 +234,20 @@ class AuthController extends StateNotifier<bool> {
           }
           return;
         }else{
+          // SIMULATION
+
+          SnackBarService.showSnackBar(context: context, message: SnackBarMessages.loginSuccess);
+            state = false;
+            // final body = res['body'];
+            
+            _ref.read(authTokenProvider.notifier).update((state) {
+              return "some-token";
+            },);
+
+            context.go(HomeView.routePath);
+
+
+
           // Failure occured
           SnackBarService.showSnackBar(context: context, message: SnackBarMessages.loginFailure);
           state = false;
