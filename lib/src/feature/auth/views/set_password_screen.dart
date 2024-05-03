@@ -33,7 +33,7 @@ class _SetPasswordScreenState extends ConsumerState<SetPasswordScreen> {
       return;
     }
 
-    ref.read(authControllerProvider.notifier).setPassword(password: _passwordController.text,email: email, context: context);
+    ref.read(authControllerProvider.notifier).setPassword(password: _passwordController.text,email: email, enrollmentNumber : widget.params['enrollmentNumber']!,context: context);
   }
 
   bool confirmPasswordVisible = false;

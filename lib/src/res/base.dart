@@ -9,7 +9,7 @@ class BasePaths{
   static const baseIconPath = "assets/icons";
   static const basePlaceholderPath = "assets/placeholders";
   // static const baseProdUrl = "http://productionURL.com";
-  static const baseProdUrl = "http://10.0.2.2:3000";
-  static const baseTestUrl = "http://10.0.2.2:3000";
+  static const baseProdUrl = "https://ccms-1vkh.onrender.com";
+  static const baseTestUrl = "https://ccms-1vkh.onrender.com";
   static const baseUrl = AppConfig.devMode ? baseTestUrl : baseProdUrl;
 }

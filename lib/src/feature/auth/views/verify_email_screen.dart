@@ -10,7 +10,7 @@ class VerifyEmailScreen extends ConsumerWidget {
   static const routePath = "/verifyEmailScreen";
 
   void _verifyEmail(WidgetRef ref,String email,BuildContext context){
-    ref.read(authControllerProvider.notifier).verifyEmail(email: email, context: context);
+    ref.read(authControllerProvider.notifier).verifyEmail(email: email, enrollmentNumber: params['enrollmentNumber']!, context: context);
   }
 
   @override
@@ -33,7 +33,7 @@ class VerifyEmailScreen extends ConsumerWidget {
                   "Verify Your Account",
                   style: TextStyle(
                       fontFamily: AssetFonts.lato,
-                      fontSize: 32,
+                      fontSize: 30,
                       fontWeight: FontWeight.w700),
                   textAlign: TextAlign.center,
                 ),
@@ -44,19 +44,19 @@ class VerifyEmailScreen extends ConsumerWidget {
                       const TextSpan(
                           style: TextStyle(
                               fontFamily: AssetFonts.lato,
-                              fontSize: 23,
+                              fontSize: 20,
                               fontWeight: FontWeight.w500),
                           text: "Check your Email "),
                       TextSpan(
                           style: const TextStyle(
                               fontFamily: AssetFonts.lato,
-                              fontSize: 23,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold),
                           text: "$email "),
                       const TextSpan(
                           style: TextStyle(
                               fontFamily: AssetFonts.lato,
-                              fontSize: 23,
+                              fontSize: 20,
                               fontWeight: FontWeight.w500),
                           text:
                               "for a verification mail and then come back and click on Verify"),
@@ -64,7 +64,7 @@ class VerifyEmailScreen extends ConsumerWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 55),
+                const SizedBox(height: 40),
                 Align(
                   child: CommonButton(
                       size: size,

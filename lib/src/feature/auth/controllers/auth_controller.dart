@@ -55,7 +55,7 @@ class AuthController extends StateNotifier<bool> {
               state = false;
               context.push(EnrollmentDetailsScreen.routePath, extra: {
                 "enrollment_number": enrollmentNumber,
-                "name": (res["body"]['name'] == null)?"John Doe" : (res["body"]['name'] as String),
+                "name": (res["body"]['name'] == null)?"There" : (res["body"]['name'] as String),
               });
             } else if (res["body"]["message"] == "Login") {
               state = false;
@@ -80,14 +80,18 @@ class AuthController extends StateNotifier<bool> {
   }
 
   Future<void> verifyEmail(
-      {required String email, required BuildContext context}) async {
+      {required String email, required String enrollmentNumber ,required BuildContext context}) async {
     state = true;
+    context.go(SetPasswordScreen.routePath,
+        extra: {"email": email, "enrollmentNumber" : enrollmentNumber,"name": "John Doe"});
+    state = false;
+    return;
     _authRepo.verifyEmail(email: email).then((response) {
       if (response != null) {
         try {
           final data = jsonDecode(response.body);
-          final otpVerifiedSuccess = data['success'];
-          if (otpVerifiedSuccess) {
+          final emailVerifiedSuccess = data['success'];
+          if (emailVerifiedSuccess) {
             SnackBarService.showSnackBar(
                 context: context,
                 message: SnackBarMessages.emailVerificationSuccess);
@@ -95,10 +99,9 @@ class AuthController extends StateNotifier<bool> {
             SnackBarService.showSnackBar(
                 context: context,
                 message: SnackBarMessages.emailVerificationFailed);
-            context.go(SetPasswordScreen.routePath,
-                extra: {"email": email, "name": "John Doe"});
             return;
           }
+          return ;
 
           final token = data['token'];
 
@@ -136,10 +139,13 @@ class AuthController extends StateNotifier<bool> {
   }
 
   Future<void> sendVerificationMail(
-      {required String email, required BuildContext context}) async {
+      {required String email,required String enrollmentNumber, required BuildContext context}) async {
     if (!state) {
       state = true;
-      _authRepo.sendVerificationMail(email: email).then((response) {
+      String enrollnum = enrollmentNumber;
+      String result = enrollnum.replaceAll("/", "");
+      print("enrollnum =  $result");
+      _authRepo.sendVerificationMail(email: email,enrollmentNumber: result).then((response) {
         if (response != null) {
           final res = jsonDecode(response.body);
           // status of response
@@ -148,26 +154,30 @@ class AuthController extends StateNotifier<bool> {
           if (status == true) {
             SnackBarService.showSnackBar(
                 context: context, message: SnackBarMessages.emailSendSuccess);
-            context.push(VerifyEmailScreen.routePath, extra: {"email": email});
+            context.push(VerifyEmailScreen.routePath, extra: {"email": email,"enrollmentNumber": enrollnum});
           } else {
             SnackBarService.showSnackBar(
                 context: context, message: SnackBarMessages.emailSendFailed);
-            context.push(VerifyEmailScreen.routePath, extra: {"email": email});
           }
         }
       });
     }
-    context.push(VerifyEmailScreen.routePath, extra: {"email": email});
+    // context.push(VerifyEmailScreen.routePath, extra: {"email": email});
     state = false;
   }
 
   Future<void> setPassword(
       {required String password,
       required String email,
+      required String enrollmentNumber,
       required BuildContext context}) async {
+        log("$enrollmentNumber, $email, $password", name: "ENROLLMENT NUMBER INSIDE SET PASSWORD");
+        String enrollnum = enrollmentNumber;
+      String result = enrollnum.replaceAll("/", "");
+      print("enrollnum =  $result");
     if (!state) {
       state = true;
-      _authRepo.setPassword(password: password, email: email).then((response) {
+      _authRepo.setPassword(password: password, email: email,enrollmentNumber: result).then((response) {
         if (response != null) {
           final res = jsonDecode(response.body);
 
@@ -177,19 +187,23 @@ class AuthController extends StateNotifier<bool> {
             SnackBarService.showSnackBar(
                 context: context, message: SnackBarMessages.passwordSetSuccess);
             context.push(HomeView.routePath);
+            final token = res['token'];
+            if (token != null) {
+              _ref.read(sharedPrefsControllerPovider).setCookie(cookie: token);
+              _ref.read(authTokenProvider.notifier).update((state) => token);
+            }
+            log(token,name: "TOKEN");
           } else {
             SnackBarService.showSnackBar(
-                context: context, message: SnackBarMessages.passwordSetFailed);
+                context: context, message: "${res['body']['message']}");
             state = false;
-            context.push(HomeView.routePath);
             return;
           }
         }
       });
     }
     state = false;
-    context.go(HomeView.routePath);
-  }
+   }
 
   Future<void> login({required BuildContext context, required String email, required String password})async{
     if(!state){
@@ -209,8 +223,9 @@ class AuthController extends StateNotifier<bool> {
             _ref.read(authTokenProvider.notifier).update((state) {
               return body["token"];
             },);
-
+            state = false;
             context.go(HomeView.routePath);
+
           }else if(status == null || status == false){
             SnackBarService.showSnackBar(context: context, message: res["error"]);
             state = false;

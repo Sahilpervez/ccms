@@ -1,6 +1,8 @@
+import 'package:ccms/src/feature/auth/controllers/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:ccms/src/feature/auth/views/login.dart';
 import 'package:ccms/src/res/constants.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 // import 'connect_your_accounts.dart';
@@ -8,16 +10,16 @@ import 'widgets/authFormField.dart';
 import 'widgets/auth_form_builder.dart';
 import 'widgets/auth_form_button.dart';
 
-class SignupScreen extends StatefulWidget {
+class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({Key? key}) : super(key: key);
 
   static const routePath = "/SignUp";
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  ConsumerState<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _form = GlobalKey();
   final _confirmPasswordController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -93,7 +95,7 @@ class _SignupScreenState extends State<SignupScreen> {
             backButton: true,
             backButtonFunction: () {
               // Navigator.of(context).pop();
-              context.go(LoginScreen.routePath);
+              // context.go(LoginScreen.routePath);
             },
           );
         }),

@@ -58,9 +58,10 @@ class AuthRepo {
     );
   }
 
-  Future<Response?> sendVerificationMail({required String email}) async {
+  Future<Response?> sendVerificationMail({required String email,required String enrollmentNumber}) async {
     final body = {
       "email": email,
+      "enrollmentNumber" : enrollmentNumber
     };
     final result = await _api.postRequest(
         url: Endpoints.sendVerificationMail, body: body, requireAuth: false);
@@ -78,16 +79,17 @@ class AuthRepo {
   }
 
   Future<Response?> setPassword(
-      {required String password, required String email}) async {
+      {required String password, required String email,required String enrollmentNumber}) async {
     final body = {
       "email": email,
       "password": password,
+      "enrollmentNumber" : enrollmentNumber
     };
 
     final result = await _api.postRequest(
       url: Endpoints.setPassword,
       body: body,
-      requireAuth: true,
+      requireAuth: false,
     );
     return result.fold((Failure failure) {
       log(failure.message, name: LogLabel.auth);

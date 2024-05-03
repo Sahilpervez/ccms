@@ -22,12 +22,13 @@ class _EnrollmentDetailsScreenState
     extends ConsumerState<EnrollmentDetailsScreen> {
   final emailController = TextEditingController();
   final enrollmentController = TextEditingController();
-
+  String name = "";
   @override
   void initState() {
     super.initState();
     final enrollmentNo = widget.params['enrollment_number'];
     enrollmentController.text = enrollmentNo!;
+    name = widget.params['name']!;
   }
 
   void _submitDetails(){
@@ -40,12 +41,11 @@ class _EnrollmentDetailsScreenState
       SnackBarService.showSnackBar(context: context, message: "Enter a valid Email ID");
       return ;
     }
-    ref.read(authControllerProvider.notifier).sendVerificationMail(email:email, context: context);
+    ref.read(authControllerProvider.notifier).sendVerificationMail(email:email, enrollmentNumber: enrollmentController.text,context: context);
   }
 
   @override
   Widget build(BuildContext context) {
-    String name = "John Doe";
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(

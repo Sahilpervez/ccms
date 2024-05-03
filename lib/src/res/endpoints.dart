@@ -4,14 +4,14 @@ class Endpoints {
   static const _base = BasePaths.baseUrl;
 
   static const getUser = "$_base/user";
-  static const login = "$_base/login";
+  static const login = "$_base/auth/studentLogin";
 
   static const lookupByEnrollmentNo = "$_base/auth/enrollmentNumber";
   static const studentLogin = "$_base/auth/studentLogin";
   
   static const verifyOtp = "$_base/verification";
-  static const sendVerificationMail = "$_base/sendVerificationMail";
-  static const setPassword = "$_base/setPassword";
+  static const sendVerificationMail = "$_base/auth/studentMailVerify";
+  static const setPassword = "$_base/auth/studentSignup";
 
   static const getProducts = "$_base/products";
   static const addProductsToCart = "$_base/cart/post";
