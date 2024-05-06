@@ -48,10 +48,10 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Flexible(
+                        const Flexible(
                           child: Text(
                             "Add Event",
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.black,
                               fontSize: 25,
                               fontFamily: AssetFonts.nunitosans,
@@ -60,13 +60,13 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(5),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
                             border:
-                                Border.all(width: 1, color: Color(0xFFE78175)),
-                            boxShadow: [
+                                Border.all(width: 1, color: const Color(0xFFE78175)),
+                            boxShadow: const [
                               BoxShadow(
                                 color: Color(0x3FC3C3C3),
                                 blurRadius: 4,
@@ -80,8 +80,8 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               SvgPicture.asset(ImageAssets.kiDrawerCalender,
-                                  color: Color(0xFFE78175)),
-                              Text(
+                                  color: const Color(0xFFE78175)),
+                              const Text(
                                 'Event Calendar',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
@@ -96,9 +96,9 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                         ),
                       ],
                     ),
-                    Padding(
+                    const Padding(
                       padding:
-                          const EdgeInsets.only(top: 20, left: 6.0, bottom: 2),
+                          EdgeInsets.only(top: 20, left: 6.0, bottom: 2),
                       child: Text(
                         'Event Name',
                         style: TextStyle(
@@ -120,25 +120,25 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide:
-                              BorderSide(width: 1, color: Color(0xFFD8E0EF)),
+                              const BorderSide(width: 1, color: Color(0xFFD8E0EF)),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide:
-                              BorderSide(width: 1, color: Color(0xFFD8E0EF)),
+                              const BorderSide(width: 1, color: Color(0xFFD8E0EF)),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                               width: 1, color: AppColors.kcThemeColor),
                         ),
                         fillColor: Colors.white,
                         focusColor: Colors.white,
                       ),
                     ),
-                    Padding(
+                    const Padding(
                       padding:
-                          const EdgeInsets.only(top: 15, left: 6.0, bottom: 2),
+                          EdgeInsets.only(top: 15, left: 6.0, bottom: 2),
                       child: Text(
                         'Description',
                         style: TextStyle(
@@ -150,7 +150,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                       ),
                     ),
                     TextFormField(
-                      controller: _nameController,
+                      controller: _descriptionController,
                       maxLines: 5,
                       onTapOutside: (event) {
                         FocusScope.of(context).unfocus();
@@ -161,25 +161,25 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide:
-                              BorderSide(width: 1, color: Color(0xFFD8E0EF)),
+                              const BorderSide(width: 1, color: Color(0xFFD8E0EF)),
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide:
-                              BorderSide(width: 1, color: Color(0xFFD8E0EF)),
+                              const BorderSide(width: 1, color: Color(0xFFD8E0EF)),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                               width: 1, color: AppColors.kcThemeColor),
                         ),
                         fillColor: Colors.white,
                         focusColor: Colors.white,
                       ),
                     ),
-                    Padding(
+                    const Padding(
                       padding:
-                          const EdgeInsets.only(top: 15, left: 6.0, bottom: 2),
+                          EdgeInsets.only(top: 15, left: 6.0, bottom: 2),
                       child: Text(
                         'Date',
                         style: TextStyle(
@@ -195,7 +195,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                         selectedDate = await showDatePicker(
                             context: context,
                             firstDate: DateTime.now(),
-                            lastDate: DateTime.now().add(Duration(days: 365)));
+                            lastDate: DateTime.now().add(const Duration(days: 365)));
                         setState(() {});
                         FocusScope.of(context).unfocus();
                       },
@@ -206,10 +206,10 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
                             side:
-                                BorderSide(width: 1, color: Color(0xFFD8E0EF)),
+                                const BorderSide(width: 1, color: Color(0xFFD8E0EF)),
                             borderRadius: BorderRadius.circular(14),
                           ),
-                          shadows: [
+                          shadows: const [
                             BoxShadow(
                               color: Color(0x38B7C8E0),
                               blurRadius: 2,
@@ -219,7 +219,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                           ],
                         ),
                         padding:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                            const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
                         child: Row(
                           children: [
                             Text(
@@ -227,7 +227,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                                   ? 'Select Date'
                                   : UtilFunctions.formattedDate(selectedDate!,
                                       monthFormat: "MMMM"),
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Color(0xFF7D8592),
                                 fontSize: 14,
                                 fontFamily: AssetFonts.nunitosans,
@@ -238,9 +238,9 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                         ),
                       ),
                     ),
-                    Padding(
+                    const Padding(
                       padding:
-                          const EdgeInsets.only(top: 15, left: 6.0, bottom: 2),
+                          EdgeInsets.only(top: 15, left: 6.0, bottom: 2),
                       child: Text(
                         'Time',
                         style: TextStyle(
@@ -265,10 +265,10 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                           color: Colors.white,
                           shape: RoundedRectangleBorder(
                             side:
-                                BorderSide(width: 1, color: Color(0xFFD8E0EF)),
+                                const BorderSide(width: 1, color: Color(0xFFD8E0EF)),
                             borderRadius: BorderRadius.circular(14),
                           ),
-                          shadows: [
+                          shadows: const [
                             BoxShadow(
                               color: Color(0x38B7C8E0),
                               blurRadius: 2,
@@ -278,12 +278,12 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                           ],
                         ),
                         padding:
-                            EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+                            const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
                         child: Row(
                           children: [
                             Text(
                               (selectedTime == null)?'Select Time': "${selectedTime!.hour}:${selectedTime!.minute}",
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Color(0xFF7D8592),
                                 fontSize: 14,
                                 fontFamily: AssetFonts.nunitosans,
@@ -308,14 +308,14 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   height: 50,
-                  margin: EdgeInsets.only(bottom: 20),
+                  margin: const EdgeInsets.only(bottom: 20),
                   width: size.width * 0.8,
                   decoration: ShapeDecoration(
-                    color: Color(0xFFE78175),
+                    color: const Color(0xFFE78175),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
-                    shadows: [
+                    shadows: const [
                       BoxShadow(
                         color: Color(0x433F8CFF),
                         blurRadius: 12,
@@ -324,7 +324,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                       )
                     ],
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Text(
                       'Save Event',
                       textAlign: TextAlign.center,
