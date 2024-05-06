@@ -5,3 +5,9 @@ import 'package:ccms/src/models/student.dart';
 final authTokenProvider = StateProvider<String?>((ref) => null);
 
 final currentUserProvider = StateProvider<Student?>((ref) => null);
+
+final isEventsFetchedProvider = StateProvider<bool?>((ref) => null);
+
+final isClubsFetchedProvider = StateProvider<bool?>(
+  (ref) => null,
+);

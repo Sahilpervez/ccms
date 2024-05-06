@@ -6,7 +6,12 @@ import 'package:ccms/src/feature/auth/views/set_password_screen.dart';
 import 'package:ccms/src/feature/auth/views/signup.dart';
 import 'package:ccms/src/feature/auth/views/verify_email_screen.dart';
 import 'package:ccms/src/feature/calendar/views/calendar_screen.dart';
+import 'package:ccms/src/feature/home/view/event_details_screen.dart';
+import 'package:ccms/src/feature/my_clubs/views/clubs_details_screen.dart';
 import 'package:ccms/src/feature/my_clubs/views/my_clubs_screen.dart';
+import 'package:ccms/src/global/views/create_event_screen.dart';
+import 'package:ccms/src/models/club.dart';
+import 'package:ccms/src/models/events.dart';
 import 'package:flutter/material.dart';
 import 'package:ccms/src/global/views/splash.dart';
 import 'package:ccms/src/feature/home/view/home.dart';
@@ -66,7 +71,13 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: HomeView.routePath,
       builder: (BuildContext context, GoRouterState state) {
-        return const HomeView();
+        final params = state.extra as Map<String,bool>?;
+        final getUser = params?['getUser'] as bool?;
+        if(getUser != null && getUser == true){
+          return HomeView(getUser: getUser as bool);
+        }else{
+          return const HomeView();
+        }
       },
     ),
     GoRoute(
@@ -79,6 +90,26 @@ final GoRouter router = GoRouter(
       path: MyClubsScreen.routePath,
       builder: (BuildContext context, GoRouterState state) {
         return const MyClubsScreen();
+      },
+    ),
+    GoRoute(
+      path: ClubsDetailsScreen.routePath,
+      builder: (BuildContext context, GoRouterState state) {
+        final Map<String,Club> params = state.extra as Map<String,Club>;
+        return ClubsDetailsScreen(club : params['club'] as Club);
+      },
+    ),
+    GoRoute(
+      path: EventDetailsScreen.routePath,
+      builder: (BuildContext context, GoRouterState state) {
+        final Map<String,Event> params = state.extra as Map<String,Event>;
+        return EventDetailsScreen(currentEvent:  params['event'] as Event);
+      },
+    ),
+    GoRoute(
+      path: CreateEventScreen.routePath,
+      builder: (BuildContext context, GoRouterState state) {
+        return const CreateEventScreen();
       },
     ),
     GoRoute(

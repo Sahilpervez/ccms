@@ -8,6 +8,7 @@ enum ClubsEnum {
   loop,
   gdsc,
   volt,
+  derobotica,
 }
 
 enum ClubRoles {

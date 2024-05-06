@@ -1,3 +1,4 @@
+import 'package:ccms/src/global/controller/events_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ccms/src/core/core.dart';
 import 'package:ccms/src/global/controller/shared_prefs_controller.dart';
@@ -18,5 +19,8 @@ class InitController {
     await _ref.read(sharedPrefsControllerPovider).getCookie().then((value){
       _ref.read(authTokenProvider.notifier).update((state) => value);
     });
+
+    // _ref.read(eventsControllerProvider.notifier).getEventsFromRepo();
+
   }
 }

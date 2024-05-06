@@ -24,7 +24,7 @@ class AuthRepo {
       "enrollmentNumber": enrollmentNumber,
     };
     final result = await _api.postRequest(
-        url: Endpoints.lookupByEnrollmentNo, body: body, requireAuth: false);
+        url: EndPoints.lookupByEnrollmentNo, body: body, requireAuth: false);
     return result.fold(
       (Failure failure) {
         log(
@@ -45,7 +45,7 @@ class AuthRepo {
     };
 
     final result = await _api.postRequest(
-        url: Endpoints.verification, body: body, requireAuth: false);
+        url: EndPoints.verification, body: body, requireAuth: false);
     return result.fold(
       (Failure failure) {
         log(
@@ -64,7 +64,7 @@ class AuthRepo {
       "enrollmentNumber" : enrollmentNumber
     };
     final result = await _api.postRequest(
-        url: Endpoints.sendVerificationMail, body: body, requireAuth: false);
+        url: EndPoints.sendVerificationMail, body: body, requireAuth: false);
 
     return result.fold(
       (Failure failure) {
@@ -87,7 +87,7 @@ class AuthRepo {
     };
 
     final result = await _api.postRequest(
-      url: Endpoints.setPassword,
+      url: EndPoints.setPassword,
       body: body,
       requireAuth: false,
     );
@@ -105,7 +105,7 @@ class AuthRepo {
     };
 
     final result = await _api.postRequest(
-        url: Endpoints.studentLogin, body: body, requireAuth: false);
+        url: EndPoints.studentLogin, body: body, requireAuth: false);
 
     return result.fold((Failure failure) {
       log(

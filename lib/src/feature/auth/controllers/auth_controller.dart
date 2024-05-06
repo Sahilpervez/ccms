@@ -216,16 +216,23 @@ class AuthController extends StateNotifier<bool> {
           final status = res['success'];
 
           if(status != null && status == true){
-            SnackBarService.showSnackBar(context: context, message: SnackBarMessages.loginSuccess);
             state = false;
             final body = res['body'];
             
+            log(body['student'].toString(),name: "AUTH LOGIN BODY");
             _ref.read(authTokenProvider.notifier).update((state) {
               return body["token"];
             },);
-            state = false;
-            context.go(HomeView.routePath);
+            _ref.read(sharedPrefsControllerPovider).setCookie(cookie: body['token']);
+            _ref.read(currentUserProvider.notifier).update((state) {
+              return Student.fromMap(body['student']);
+            },);
 
+            _ref.read(sharedPrefsControllerPovider).setUser(user: Student.fromMap(body['student']));
+            state = false;
+            // return;
+            SnackBarService.showSnackBar(context: context, message: SnackBarMessages.loginSuccess);
+            context.go(HomeView.routePath);
           }else if(status == null || status == false){
             SnackBarService.showSnackBar(context: context, message: res["error"]);
             state = false;

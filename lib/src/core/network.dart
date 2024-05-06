@@ -42,9 +42,10 @@ class NetworkRepo{
     }
     try{
       final response = await get(Uri.parse(url), headers: requestHeaders);
-      log('RESPONSE : ${response.body}', name: LogLabel.httpGet);
+      // log('RESPONSE : ${response.body}', name: LogLabel.httpGet);
       return Right(response);
     }catch(e, stktrc){
+      log("$e",name: "FAILURE : ${LogLabel.httpGet}");
       return Left(Failure(message: FailureMessage.getRequestMessage, stackTrace:stktrc));
     }
   }

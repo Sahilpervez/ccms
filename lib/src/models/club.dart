@@ -19,9 +19,9 @@ class Club {
   final String? clubSecretary;
   final String clubTreasurer;
   final int? eventCount;
-  final Faculty faculties;
-  final List<Event> events;
-  final List<Membership> membership; 
+  // final Faculty faculties;
+  final List<Event>? events;
+  // final List<Membership> membership; 
   Club({
     this.clubId = 0,
     this.clubName = '',
@@ -33,9 +33,9 @@ class Club {
     this.clubSecretary,
     this.clubTreasurer = '',
     this.eventCount,
-    required this.faculties,
-    this.events = const [],
-    this.membership = const [],
+    // required this.faculties,
+    this.events,
+    // this.membership = const [],
   });
 
 
@@ -87,45 +87,45 @@ class Club {
       clubSecretary: clubSecretary ?? this.clubSecretary,
       clubTreasurer: clubTreasurer ?? this.clubTreasurer,
       eventCount: eventCount ?? this.eventCount,
-      faculties: faculties ?? this.faculties,
+      // faculties: faculties ?? this.faculties,
       events: events ?? this.events,
-      membership: membership ?? this.membership,
+      // membership: membership ?? this.membership,
     );
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
-      'clubId': clubId,
-      'clubName': clubName,
-      'clubDescription': clubDescription,
-      'isTechnical': isTechnical,
-      'clubMentor': clubMentor,
-      'clubPresident': clubPresident,
-      'clubVicePresident': clubVicePresident,
-      'clubSecretary': clubSecretary,
-      'clubTreasurer': clubTreasurer,
-      'eventCount': eventCount,
-      'faculties': faculties.toMap(),
-      'events': events.map((x) => x.toMap()).toList(),
-      'membership': membership.map((x) => x.toMap()).toList(),
+      'club_id': clubId,
+      'club_name': clubName,
+      'club_description': clubDescription,
+      'is_technical': isTechnical,
+      'club_mentor': clubMentor,
+      'club_president': clubPresident,
+      'club_vice_president': clubVicePresident,
+      'club_secretary': clubSecretary,
+      'club_treasurer': clubTreasurer,
+      'event_count': eventCount,
+      // 'faculties': faculties.toMap(),
+      'events': events?.map((x) => x.toMap()).toList() ?? [],
+      // 'membership': membership.map((x) => x.toMap()).toList(),
     };
   }
 
   factory Club.fromMap(Map<String, dynamic> map) {
     return Club(
-      clubId: map['clubId'] as int,
-      clubName: map['clubName'] as String,
-      clubDescription: map['clubDescription'] as String,
-      isTechnical: map['isTechnical'] != null ? map['isTechnical'] as bool : null,
-      clubMentor: map['clubMentor'] as int,
-      clubPresident: map['clubPresident'] != null ? map['clubPresident'] as String : null,
-      clubVicePresident: map['clubVicePresident'] != null ? map['clubVicePresident'] as String : null,
-      clubSecretary: map['clubSecretary'] != null ? map['clubSecretary'] as String : null,
-      clubTreasurer: map['clubTreasurer'] as String,
-      eventCount: map['eventCount'] != null ? map['eventCount'] as int : null,
-      faculties: Faculty.fromMap(map['faculties'] as Map<String,dynamic>),
-      events: List<Event>.from((map['events'] as List<int>).map<Event>((x) => Event.fromMap(x as Map<String,dynamic>),),),
-      membership: List<Membership>.from((map['membership'] as List<int>).map<Membership>((x) => Membership.fromMap(x as Map<String,dynamic>),),),
+      clubId: map['club_id'] as int,
+      clubName: map['club_name'] as String,
+      clubDescription: map['club_description'] as String,
+      isTechnical: map['is_technical'] != null ? map['is_technical'] as bool : null,
+      clubMentor: map['club_mentor'] as int,
+      clubPresident: map['club_president'] != null ? map['club_president'] as String : null,
+      clubVicePresident: map['club_vice_president'] != null ? map['club_vice_president'] as String : null,
+      clubSecretary: map['club_secretary'] != null ? map['club_secretary'] as String : null,
+      clubTreasurer: map['club_treasurer'] as String,
+      eventCount: map['event_count'] != null ? map['event_count'] as int : null,
+      // faculties: Faculty.fromMap(map['faculties'] as Map<String,dynamic>),
+      events: List<Event>.from((map['events']).map<Event>((x) => Event.fromMap(x as Map<String,dynamic>),),),
+      // membership: List<Membership>.from((map['membership'] as List<int>).map<Membership>((x) => Membership.fromMap(x as Map<String,dynamic>),),),
     );
   }
 
@@ -135,7 +135,7 @@ class Club {
 
   @override
   String toString() {
-    return 'Club(clubId: $clubId, clubName: $clubName, clubDescription: $clubDescription, isTechnical: $isTechnical, clubMentor: $clubMentor, clubPresident: $clubPresident, clubVicePresident: $clubVicePresident, clubSecretary: $clubSecretary, clubTreasurer: $clubTreasurer, eventCount: $eventCount, faculties: $faculties, events: $events, membership: $membership)';
+    return 'Club(clubId: $clubId, clubName: $clubName, clubDescription: $clubDescription, isTechnical: $isTechnical, clubMentor: $clubMentor, clubPresident: $clubPresident, clubVicePresident: $clubVicePresident, clubSecretary: $clubSecretary, clubTreasurer: $clubTreasurer, eventCount: $eventCount,events: $events,)';
   }
 
   @override
@@ -153,9 +153,10 @@ class Club {
       other.clubSecretary == clubSecretary &&
       other.clubTreasurer == clubTreasurer &&
       other.eventCount == eventCount &&
-      other.faculties == faculties &&
-      listEquals(other.events, events) &&
-      listEquals(other.membership, membership);
+      // other.faculties == faculties &&
+      listEquals(other.events, events);
+      //  &&
+      // listEquals(other.membership, membership);
   }
 
   @override
@@ -170,8 +171,9 @@ class Club {
       clubSecretary.hashCode ^
       clubTreasurer.hashCode ^
       eventCount.hashCode ^
-      faculties.hashCode ^
-      events.hashCode ^
-      membership.hashCode;
+      // faculties.hashCode ^
+      events.hashCode;
+      //  ^
+      // membership.hashCode;
   }
 }

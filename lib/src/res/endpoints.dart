@@ -1,6 +1,6 @@
 import 'base.dart';
 
-class Endpoints {
+class EndPoints {
   static const _base = BasePaths.baseUrl;
 
   static const getUser = "$_base/user";
@@ -26,6 +26,8 @@ class Endpoints {
 
   static const home = "$_base/home";
   static const getSingleProduct = "$_base/product/";
+  static const getEvents = "$_base/events/";
+  static const getClubs = "$_base/clubs/";
 
   static const privacyPolicy = "https://ricoz.in/privacy-policy";
   static const termsOfService = "https://ricoz.in/termsandconditions";

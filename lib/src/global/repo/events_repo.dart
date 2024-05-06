@@ -1,41 +1,24 @@
+import 'dart:convert';
+import 'dart:developer';
 import 'package:ccms/src/models/events.dart';
+import 'package:ccms/src/res/endpoints.dart';
+import 'package:ccms/src/res/strings.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-
+import 'package:ccms/src/core/core.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:http/http.dart';
 
 final eventsRepoProvider = Provider<EventsRepo>((ref) {
-  return EventsRepo();
+  final api = ref.watch(networkRepoProvider);
+  return EventsRepo(api: api);
 });
 
-
 // class NearestEventsRepo extends StateNotifier<List<NearestEvents>> {
-class EventsRepo{
-  // NearestEventsRepo() : super([
-  //   NearestEvents(
-  //     eventDate: DateTime.now().copyWith(hour: 18, minute: 15),
-  //     eventLength: Duration(hours: 4),
-  //     eventName: "Follow up with the client",
-  //     priority: "High",
-  //   ),
-  //   NearestEvents(
-  //     eventDate: DateTime.now().copyWith(hour: 17, minute: 30).add(Duration(days: 1)),
-  //     eventLength: Duration(hours: 4),
-  //     eventName: "Meeting with Development Team",
-  //     priority: "High",
-  //   ),
-  //   NearestEvents(
-  //     eventDate: DateTime.now().copyWith(hour: 17),
-  //     eventLength: Duration(hours: 2),
-  //     eventName: "Abhigyna Birthday",
-  //     priority: "Low",
-  //   ),
-  //   NearestEvents(
-  //     eventDate: DateTime(2023,9,15),
-  //     eventLength: Duration(hours: 3),
-  //     eventName: "Connecting new lead",
-  //     priority: "Low",
-  //   ),
-  // ]);
+class EventsRepo {
+  final NetworkRepo _api;
+  final _name = "EVENT_CONTROLLER";
+  EventsRepo({required api}) : _api = api;
 
   final _events = [
     // Event(
@@ -65,7 +48,6 @@ class EventsRepo{
     //   priority: "Low",
     //   icon: {"icon" : ImageAssets.kiNearestEventsConnect,"color" :const Color(0xff6D5DD3)}
     // ),
-    
   ];
 
   Future<void> fetchEventsFromAPI() async {
@@ -84,12 +66,47 @@ class EventsRepo{
   //   // state.add(event);
   // }
 
-  void addEvent(Event event){
+  void addEvent(Event event) {
     _events.add(event);
   }
 
-  List<Event> getEvents (){
+  FutureEither<List<Event>?> getEvents() async {
+    final result =
+        await _api.getRequest(url: EndPoints.getEvents, requireAuth: false);
+    return result.fold(
+      (Failure failure) {
+        log(failure.message, name: _name);
+        return Left(failure);
+      },
+      (Response response) {
+        try {
+          final data = jsonDecode(response.body);
+          final eventsMap = data['body']['data'];
+          int i = 1;
+          final List<Event> events = [];
+          eventsMap.forEach((e) {
+            
+            events.add(
+              Event.fromMap(e)
+            );
+            
+            i++;
+          });
+          // for(dynamic product in eventJson){
+          //   products.add(Event.fromMap(product));
+          // }
+          log("Value Returned");
+          return Right(events);
+        } catch (e, stktrc) {
+          log(FailureMessage.jsonParsingFailed, name: _name);
+          return Left(Failure(
+            message: FailureMessage.jsonParsingFailed,
+            stackTrace: stktrc,
+          ));
+        }
+      },
+    );
 
-    return [..._events];
+    // return [..._events];
   }
 }

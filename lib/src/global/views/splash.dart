@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:ccms/src/feature/auth/views/enrollment_screen.dart';
 import 'package:ccms/src/feature/home/view/home.dart';
 import 'package:ccms/src/res/assets.dart';
@@ -36,11 +38,21 @@ class _SplashViewState extends ConsumerState<SplashView> {
         final user = ref.read(currentUserProvider);
         final token = ref.read(authTokenProvider);
 
-        /// Check if both the [user] and [token] have value
-        if(user == null || token == null){
-          /// Route the user to Authenticaion screen
+        if(token != null && user == null){
+          /// Route the user to Home screen and Get the user from server.
+          // TODO: Write logic to get user before routing Or in the home screen.
+          context.go(HomeView.routePath,extra: {'getUser' : true});
+        }else if(token == null && user != null){
+          /// Route the user to Authentication screen.
+          log("token == null && user != null",name: "Splash Screen Redirect");
+        }
+        /// Check if both the [user] and [token] have value.
+        else if(user == null && token == null){
+          /// Route the user to Authenticaion screen.
+          log("user == null && token == null",name: "Splash Screen Redirect");
+          context.go(EnrollmentScreen.routePath);
         } else {
-          /// Route the user to Home screen
+          /// Route the user to Home screen.
           // context.go(EnrollmentScreen.routePath);
           context.go(HomeView.routePath);
         }
