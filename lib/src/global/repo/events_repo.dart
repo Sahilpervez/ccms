@@ -67,7 +67,7 @@ class EventsRepo {
   // }
 
   Future<bool?> addEvent(Event event) async {
-    final result = await _api.postRequest(url: EndPoints.createEvent,requireAuth: false);
+    final result = await _api.postRequest(url: EndPoints.createEvent,requireAuth: false,body: event.toMap());
     
     return result.fold((Failure failure) {
       log(failure.message, name: _name);
