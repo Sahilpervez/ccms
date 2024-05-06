@@ -109,7 +109,8 @@ final GoRouter router = GoRouter(
     GoRoute(
       path: CreateEventScreen.routePath,
       builder: (BuildContext context, GoRouterState state) {
-        return const CreateEventScreen();
+        final Map<String,int> params = state.extra as Map<String,int>;
+        return CreateEventScreen(clubId: params['clubId'] as int,);
       },
     ),
     GoRoute(

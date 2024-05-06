@@ -42,7 +42,7 @@ class ClubsDetailsScreen extends ConsumerWidget {
       floatingActionButton: (inClubAsTeam)
           ? IconButton(
               onPressed: () {
-                context.push(CreateEventScreen.routePath);
+                context.push(CreateEventScreen.routePath,extra: {"clubId" : club.clubId});
               },
               icon: const Padding(
                 padding: EdgeInsets.all(8.0),

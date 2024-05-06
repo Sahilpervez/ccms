@@ -7,6 +7,7 @@ import 'package:ccms/src/utils/config.dart';
 import 'package:ccms/src/utils/snackbar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 final eventsControllerProvider =
     StateNotifierProvider<EventsController, List<Event>>((ref) {
@@ -23,9 +24,21 @@ class EventsController extends StateNotifier<List<Event>> {
   final StateNotifierProviderRef<EventsController, List<Event>> _ref;
 
   // Add Events;  
-  void addEvents(Event event){
-    state.add(event);
-    _repo.addEvent(event);
+  Future<void> addEvents({required Event event,required BuildContext context}) async {
+    // state.add(event);
+    _ref.read(isEventsFetchedProvider.notifier).update((state) => false,);
+    await _repo.addEvent(event).then((value) {
+      if(value == true){
+        SnackBarService.showSnackBar(context: context, message: "Event Created Successfully");
+        if(context.canPop()){
+          context.pop();
+        }
+      }else{
+        SnackBarService.showSnackBar(context: context, message: "Couldn't create Event");
+        return ;
+      }  
+    },);
+
   }
 
   Future<List<Event>?> getEventsFromRepo({ BuildContext? context }) async {

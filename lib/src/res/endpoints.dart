@@ -27,6 +27,7 @@ class EndPoints {
   static const home = "$_base/home";
   static const getSingleProduct = "$_base/product/";
   static const getEvents = "$_base/events/";
+  static const createEvent = "$_base/events/";
   static const getClubs = "$_base/clubs/";
 
   static const privacyPolicy = "https://ricoz.in/privacy-policy";

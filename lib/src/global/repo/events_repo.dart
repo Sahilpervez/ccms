@@ -66,8 +66,21 @@ class EventsRepo {
   //   // state.add(event);
   // }
 
-  void addEvent(Event event) {
-    _events.add(event);
+  Future<bool?> addEvent(Event event) async {
+    final result = await _api.postRequest(url: EndPoints.createEvent,requireAuth: false);
+    
+    return result.fold((Failure failure) {
+      log(failure.message, name: _name);
+      return null;
+    }, (Response response) {
+      final data = jsonDecode(response.body);
+      if(data['status'] == true){
+        return true;
+      }
+      return false;
+    },);
+
+
   }
 
   FutureEither<List<Event>?> getEvents() async {
