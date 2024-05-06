@@ -67,7 +67,22 @@ class EventsRepo {
   // }
 
   Future<bool?> addEvent(Event event) async {
-    final result = await _api.postRequest(url: EndPoints.createEvent,requireAuth: false,body: event.toMap());
+    final eventDate = event.eventDate.copyWith(hour:event.eventTime.hour,minute: event.eventTime.minute);
+    final eventDateToSend = eventDate.toIso8601String().substring(0,19) + "Z";
+    final eventModifiedOn = event.createdOn.toIso8601String().substring(0,19) + "Z";
+    log("DATE TIME : ${eventDateToSend}");
+    final body = {
+      "club_id" : event.clubId,
+      "event_title" : event.eventTitle,
+      "event_description" : event.eventDescription,
+      "event_date" : eventDateToSend,
+      "event_time" : eventDateToSend,
+      "event_location" : event.eventLocation,
+      "created_on" : eventModifiedOn,
+      "created_by" : event.createdBy,
+      "last_modified_on": eventModifiedOn,
+    };
+    final result = await _api.postRequest(url: EndPoints.createEvent,requireAuth: false,body: body);
     
     return result.fold((Failure failure) {
       log(failure.message, name: _name);

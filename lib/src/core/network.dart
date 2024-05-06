@@ -67,6 +67,7 @@ class NetworkRepo{
     }
     try{
       print("MAKING POST REQUEST");
+      print(jsonEncode(body));
       final response = await post(Uri.parse(url), body: jsonEncode(body), headers: requestHeaders);
       print("POST REQUEST SUCCESSFULL");
       print(response);

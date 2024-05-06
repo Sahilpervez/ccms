@@ -42,10 +42,10 @@ class EventsController extends StateNotifier<List<Event>> {
   }
 
   Future<List<Event>?> getEventsFromRepo({ BuildContext? context }) async {
-    final eventsFetchStatus = _ref.read(isEventsFetchedProvider);
-    if(eventsFetchStatus == true && state.isNotEmpty){
-      return [...state];
-    }
+    // final eventsFetchStatus = _ref.read(isEventsFetchedProvider);
+    // if(eventsFetchStatus == true && state.isNotEmpty){
+    //   return [...state];
+    // }
 
     final result = await _repo.getEvents();
     

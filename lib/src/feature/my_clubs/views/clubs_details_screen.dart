@@ -46,10 +46,9 @@ class ClubsDetailsScreen extends ConsumerWidget {
               },
               icon: const Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Icon(Icons.add),
+                child: Icon(Icons.add,color:Colors.white),
               ),
               style: ElevatedButton.styleFrom(
-                iconColor: Colors.white,
                 backgroundColor: AppColors.kcThemeColor,
               ))
           : null,
