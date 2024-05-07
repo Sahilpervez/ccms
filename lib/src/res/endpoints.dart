@@ -29,6 +29,11 @@ class EndPoints {
   static const getEvents = "$_base/events/";
   static const createEvent = "$_base/events/";
   static const getClubs = "$_base/clubs/";
+  static const enrollInEvent = "$_base/events/enroll/";
+
+  static String getClubsById(int id){
+    return "$_base/clubs/$id/details";
+  }
 
   static const privacyPolicy = "https://ricoz.in/privacy-policy";
   static const termsOfService = "https://ricoz.in/termsandconditions";

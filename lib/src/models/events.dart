@@ -85,23 +85,23 @@ class Event {
     // Speaker? speakers,
   }) {
     return Event(
-      eventId: eventId ?? this.eventId,
-      clubId: clubId ?? this.clubId,
-      eventTitle: eventTitle ?? this.eventTitle,
-      eventDescription: eventDescription ?? this.eventDescription,
-      eventDate: eventDate ?? this.eventDate,
-      eventTime: eventTime ?? this.eventTime,
-      eventLocation: eventLocation ?? this.eventLocation,
-      createdOn: createdOn ?? this.createdOn,
-      lastModifiedOn: lastModifiedOn ?? this.lastModifiedOn,
-      createdBy: createdBy ?? this.createdBy,
-      organizingClubs: organizingClubs ?? this.organizingClubs,
-      organizingStudent : organizingStudent ?? this.organizingStudent 
-      // attendance: attendance ?? this.attendance,
-      // clubs: clubs ?? this.clubs,
-      // student: student ?? this.student,
-      // speakers: speakers ?? this.speakers,
-    );
+        eventId: eventId ?? this.eventId,
+        clubId: clubId ?? this.clubId,
+        eventTitle: eventTitle ?? this.eventTitle,
+        eventDescription: eventDescription ?? this.eventDescription,
+        eventDate: eventDate ?? this.eventDate,
+        eventTime: eventTime ?? this.eventTime,
+        eventLocation: eventLocation ?? this.eventLocation,
+        createdOn: createdOn ?? this.createdOn,
+        lastModifiedOn: lastModifiedOn ?? this.lastModifiedOn,
+        createdBy: createdBy ?? this.createdBy,
+        organizingClubs: organizingClubs ?? this.organizingClubs,
+        organizingStudent: organizingStudent ?? this.organizingStudent
+        // attendance: attendance ?? this.attendance,
+        // clubs: clubs ?? this.clubs,
+        // student: student ?? this.student,
+        // speakers: speakers ?? this.speakers,
+        );
   }
 
   Map<String, dynamic> toMap() {
@@ -116,12 +116,16 @@ class Event {
       'created_on': createdOn.toIso8601String(),
       'last_modified_on': lastModifiedOn.toIso8601String(),
       'created_by': createdBy,
-      "clubs" : organizingClubs?.map((element) {
-        return {'club_name' : element};
-      },).toList(),
-      'student' : {
-        "first_name" : organizingStudent?.substring(0,organizingStudent?.indexOf(" ")),
-        "last_name" : organizingStudent?.substring(organizingStudent?.indexOf(" ") ?? 0),
+      "clubs": organizingClubs?.map(
+        (element) {
+          return {'club_name': element};
+        },
+      ).toList(),
+      'student': {
+        "first_name":
+            organizingStudent?.substring(0, organizingStudent?.indexOf(" ")),
+        "last_name":
+            organizingStudent?.substring(organizingStudent?.indexOf(" ") ?? 0),
       }
       // 'attendance': attendance,
       // 'clubs': clubs.map((x) => x.toMap()).toList(),
@@ -130,7 +134,7 @@ class Event {
     };
   }
 
-  factory Event.fromMap(Map<String, dynamic> e) {
+  factory Event.fromMap(Map<String, dynamic> e, [int type = 1]) {
     // return Event(
     //   eventId: map['event_id'] as int,
     //   clubId: map['club_id'] as int,
@@ -148,24 +152,47 @@ class Event {
     //   // speakers: Speaker.fromMap(map['speakers'] as Map<String,dynamic>),
     // );
 
-    return Event(
+    if (type == 1) {
+      return Event(
+        eventId: e['event_id'],
+        clubId: e['club_id'],
+        eventTitle: e['event_title'],
+        eventDescription: e['event_description'],
+        eventLocation: e['event_location'],
+        eventDate: DateTime.parse(e['event_date']),
+        eventTime: TimeOfDay.fromDateTime(DateTime.parse(e['event_time'])),
+        createdOn: DateTime.parse(e['created_on']),
+        lastModifiedOn: DateTime.parse(e['last_modified_on']),
+        createdBy: e['created_by'],
+        organizingClubs: [e['clubs']?['club_name']] ?? [],
+        organizingStudent:
+            (e['student']['first_name'] + " " + e['student']['last_name']) ??
+                [],
+        // attendance: List<String>.from((map['attendance'] as List<String>)),
+        // clubs: List<Club>.from((map['clubs'] as List<int>).map<Club>((x) => Club.fromMap(x as Map<String,dynamic>),),),
+        // student: Student.fromMap(map['student'] as Map<String,dynamic>),
+        // speakers: Speaker.fromMap(map['speakers'] as Map<String,dynamic>),
+      );
+    }
+     return Event(
       eventId: e['event_id'],
       clubId: e['club_id'],
       eventTitle: e['event_title'],
       eventDescription: e['event_description'],
       eventLocation: e['event_location'],
       eventDate: DateTime.parse(e['event_date']),
-      eventTime: TimeOfDay.fromDateTime(DateTime.parse(e['event_date'])),
+      eventTime: TimeOfDay.fromDateTime(DateTime.parse(e['event_time'])),
       createdOn: DateTime.parse(e['created_on']),
       lastModifiedOn: DateTime.parse(e['last_modified_on']),
       createdBy: e['created_by'],
-      organizingClubs: [e['clubs']['club_name']],
-      organizingStudent: e['student']['first_name'] + " " + e['student']['last_name'],
+      // organizingClubs: [e['clubs']?['club_name']] ?? [],
+      // organizingStudent: (e['student']['first_name'] + " " + e['student']['last_name']) ?? [],
       // attendance: List<String>.from((map['attendance'] as List<String>)),
       // clubs: List<Club>.from((map['clubs'] as List<int>).map<Club>((x) => Club.fromMap(x as Map<String,dynamic>),),),
       // student: Student.fromMap(map['student'] as Map<String,dynamic>),
       // speakers: Speaker.fromMap(map['speakers'] as Map<String,dynamic>),
     );
+  
   }
 
   String toJson() => json.encode(toMap());
@@ -193,7 +220,7 @@ class Event {
         other.eventLocation == eventLocation &&
         other.createdOn == createdOn &&
         other.lastModifiedOn == lastModifiedOn &&
-        other.createdBy == createdBy && 
+        other.createdBy == createdBy &&
         other.organizingClubs == organizingClubs &&
         other.organizingStudent == organizingStudent;
     // &&

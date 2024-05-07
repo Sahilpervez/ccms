@@ -21,13 +21,16 @@ class ClubHeaderSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Flexible(
-              child: Text(
-                club.clubName,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 35,
-                  fontFamily: AssetFonts.nunitosans,
-                  fontWeight: FontWeight.w700,
+              child: Padding(
+                padding: const EdgeInsets.only(left:8.0),
+                child: Text(
+                  club.clubName,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 35,
+                    fontFamily: AssetFonts.nunitosans,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ),

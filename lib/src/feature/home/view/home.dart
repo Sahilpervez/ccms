@@ -37,15 +37,20 @@ class _HomeViewState extends ConsumerState<HomeView> {
     });
   }
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    ref.read(eventsControllerProvider.notifier).getEventsFromRepo();
+  }
+
   // List<int> events = [1, 2, 3, 4, 5, 6, 7];
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.read(currentUserProvider);
-    final token = ref.read(authTokenProvider);
-    log(user.toString(), name: "USER MODEL");
-    log(token.toString(), name: "AUTH TOKEN");
+    final eventsList = ref.watch(eventsControllerProvider);
+    final isLoading = ref.watch(eventsControllerProvider.notifier).isLoading;
     final size = MediaQuery.of(context).size;
     return Scaffold(
       key: _scaffoldKey,
@@ -56,125 +61,97 @@ class _HomeViewState extends ConsumerState<HomeView> {
         child: LayoutBuilder(builder: (context, constraints) {
           return Stack(
             children: [
-              FutureBuilder(
-                future: ref.read(eventsControllerProvider.notifier)
-                    .getEventsFromRepo(context: context),
-                builder: (context, snapshot) {
-                  final data = snapshot.data;
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    // return const Center(
-                    //   child: CircularProgressIndicator(),
-                    // );
-                    return Column(children: [
-                      const SizedBox(height: 100),
-                      const WelcomeDisplayName(name: "Sahilpervez"),
-                      const ScreenHeader(header: "Dashboard"),
-                      DateBar(constraints: constraints),
-                      // SectionHeadings(heading: "Projects", viewMoreFunction: () {}),
-                      EventTypeSelector(
-                          selectedEventType: selectedEventType,
-                          onSelectionChanged: onOptionsChange),
-                      const SizedBox(height: 10),
-                      Expanded(child: Container(
-                        child: const Center(child: const CircularProgressIndicator(),),
-                      ),),
-                    ]);
-                  }
-                  if (snapshot.hasError) {
-                    return const Center(
-                      child: Text("Error Loading Data"),
-                    );
-                  }
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (data != null) {
-                      return ListView.builder(
-                        itemCount: data.length + 1,
-                        itemBuilder: (context, index) {
-                          if (index == 0) {
-                            return Column(children: [
-                              const SizedBox(height: 100),
-                              const WelcomeDisplayName(name: "Sahilpervez"),
-                              const ScreenHeader(header: "Dashboard"),
-                              DateBar(constraints: constraints),
-                              // SectionHeadings(heading: "Projects", viewMoreFunction: () {}),
-                              EventTypeSelector(
-                                  selectedEventType: selectedEventType,
-                                  onSelectionChanged: onOptionsChange),
-                              const SizedBox(height: 10),
-                            ]);
-                          }
-                          if (index != 0) {
-                            return LayoutBuilder(
-                                builder: (context, constraints) {
-                              return EventCard(constraints: constraints,currentEvent:  data[index-1]);
-                            });
-                          }
-                        },
-                      );
-
-                      // Column(
-                      //   children: [
-                      //     const SizedBox(height: 100),
-                      //     const WelcomeDisplayName(name: "Sahilpervez"),
-                      //     const ScreenHeader(header: "Dashboard"),
-                      //     DateBar(constraints: constraints),
-                      //     // SectionHeadings(heading: "Projects", viewMoreFunction: () {}),
-                      //     EventTypeSelector(
-                      //         selectedEventType: selectedEventType,
-                      //         onSelectionChanged: onOptionsChange),
-                      //     const SizedBox(height: 10),
-                      //     if (data != null && data!.isNotEmpty)
-                      //       Expanded(
-                      //         child: ListView.builder(
-                      //           itemCount: data.length,
-                      //           itemBuilder: (context, index) {
-                      //             return LayoutBuilder(
-                      //                 builder: (context, constraints) {
-                      //               return EventCard(constraints: constraints);
-                      //             });
-                      //           },
-                      //         ),
-                      //       ),
-                      //     // ...data!.map(
-                      //     //   (e) {
-                      //     //     return LayoutBuilder(
-                      //     //         builder: (context, constraints) {
-                      //     //       return EventCard(constraints: constraints);
-                      //     //     });
-                      //     //   },
-                      //     // )
-                      //   ],
-                      // );
-                    } else {
-                      return const Center(
-                        child: Text("Error Loading Data"),
-                      );
+              if (isLoading)
+                Column(children: [
+                  const SizedBox(height: 100),
+                  const WelcomeDisplayName(name: "Sahilpervez"),
+                  const ScreenHeader(header: "Dashboard"),
+                  DateBar(constraints: constraints),
+                  // SectionHeadings(heading: "Projects", viewMoreFunction: () {}),
+                  EventTypeSelector(
+                      selectedEventType: selectedEventType,
+                      onSelectionChanged: onOptionsChange),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: Container(
+                      child: const Center(
+                        child: const CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+                ]),
+              if (isLoading == false && eventsList.isEmpty)
+                const Center(
+                  child: Text("Error Loading Data"),
+                ),
+              if (eventsList.isNotEmpty)
+                ListView.builder(
+                  itemCount: eventsList.length + 1,
+                  itemBuilder: (context, index) {
+                    if (index == 0) {
+                      return Column(children: [
+                        const SizedBox(height: 100),
+                        const WelcomeDisplayName(name: "Sahilpervez"),
+                        const ScreenHeader(header: "Dashboard"),
+                        DateBar(constraints: constraints),
+                        // SectionHeadings(heading: "Projects", viewMoreFunction: () {}),
+                        EventTypeSelector(
+                            selectedEventType: selectedEventType,
+                            onSelectionChanged: onOptionsChange),
+                        const SizedBox(height: 10),
+                      ]);
                     }
-                  }
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-              ),
+                    if (index != 0) {
+                      return LayoutBuilder(builder: (context, constraints) {
+                        return EventCard(
+                            constraints: constraints,
+                            currentEvent: eventsList[index - 1]);
+                      });
+                    }
+                  },
+                ),
+              
               // FutureBuilder(
               //   future: ref
               //       .read(eventsControllerProvider.notifier)
-              //       .getEventsFromRepo(),
+              //       .getEventsFromRepo(context: context),
               //   builder: (context, snapshot) {
+              //     final data = snapshot.data;
+              //     if (snapshot.connectionState == ConnectionState.waiting) {
+              //       // return const Center(
+              //       //   child: CircularProgressIndicator(),
+              //       // );
+              //       return Column(children: [
+              //         const SizedBox(height: 100),
+              //         const WelcomeDisplayName(name: "Sahilpervez"),
+              //         const ScreenHeader(header: "Dashboard"),
+              //         DateBar(constraints: constraints),
+              //         // SectionHeadings(heading: "Projects", viewMoreFunction: () {}),
+              //         EventTypeSelector(
+              //             selectedEventType: selectedEventType,
+              //             onSelectionChanged: onOptionsChange),
+              //         const SizedBox(height: 10),
+              //         Expanded(
+              //           child: Container(
+              //             child: const Center(
+              //               child: const CircularProgressIndicator(),
+              //             ),
+              //           ),
+              //         ),
+              //       ]);
+              //     }
               //     if (snapshot.hasError) {
-              //       return Center(child: Text("Some error Occured"));
-              //     } else if (snapshot.connectionState ==
-              //         ConnectionState.waiting) {
-              //       return Center(
-              //         child: CircularProgressIndicator(),
+              //       return const Center(
+              //         child: Text("Error Loading Data"),
               //       );
-              //     } else if (snapshot.connectionState == ConnectionState.done) {
-              //       if (snapshot.hasData) {
-              //         final data = snapshot.data;
-              //         if (data != null) {
-              //           SingleChildScrollView(
-              //             child: Column(
-              //               children: [
+              //     }
+              //     if (snapshot.connectionState == ConnectionState.done) {
+              //       if (data != null) {
+              //         return ListView.builder(
+              //           itemCount: data.length + 1,
+              //           itemBuilder: (context, index) {
+              //             if (index == 0) {
+              //               return Column(children: [
               //                 const SizedBox(height: 100),
               //                 const WelcomeDisplayName(name: "Sahilpervez"),
               //                 const ScreenHeader(header: "Dashboard"),
@@ -184,38 +161,73 @@ class _HomeViewState extends ConsumerState<HomeView> {
               //                     selectedEventType: selectedEventType,
               //                     onSelectionChanged: onOptionsChange),
               //                 const SizedBox(height: 10),
-              //                 if (events != null && events!.isNotEmpty)
-              //                   ...events!.map(
-              //                     (e) {
-              //                       return LayoutBuilder(
-              //                           builder: (context, constraints) {
-              //                         return EventCard(
-              //                             constraints: constraints);
-              //                       });
-              //                     },
-              //                   )
-              //               ],
-              //             ),
-              //           );
-              //         } else {
-              //           return Center(child: Text("No Data from Server"));
-              //         }
+              //               ]);
+              //             }
+              //             if (index != 0) {
+              //               return LayoutBuilder(
+              //                   builder: (context, constraints) {
+              //                 return EventCard(
+              //                     constraints: constraints,
+              //                     currentEvent: data[index - 1]);
+              //               });
+              //             }
+              //           },
+              //         );
+              //         // Column(
+              //         //   children: [
+              //         //     const SizedBox(height: 100),
+              //         //     const WelcomeDisplayName(name: "Sahilpervez"),
+              //         //     const ScreenHeader(header: "Dashboard"),
+              //         //     DateBar(constraints: constraints),
+              //         //     // SectionHeadings(heading: "Projects", viewMoreFunction: () {}),
+              //         //     EventTypeSelector(
+              //         //         selectedEventType: selectedEventType,
+              //         //         onSelectionChanged: onOptionsChange),
+              //         //     const SizedBox(height: 10),
+              //         //     if (data != null && data!.isNotEmpty)
+              //         //       Expanded(
+              //         //         child: ListView.builder(
+              //         //           itemCount: data.length,
+              //         //           itemBuilder: (context, index) {
+              //         //             return LayoutBuilder(
+              //         //                 builder: (context, constraints) {
+              //         //               return EventCard(constraints: constraints);
+              //         //             });
+              //         //           },
+              //         //         ),
+              //         //       ),
+              //         //     // ...data!.map(
+              //         //     //   (e) {
+              //         //     //     return LayoutBuilder(
+              //         //     //         builder: (context, constraints) {
+              //         //     //       return EventCard(constraints: constraints);
+              //         //     //     });
+              //         //     //   },
+              //         //     // )
+              //         //   ],
+              //         // );
               //       } else {
-              //         return Center(child: Text("No Data from Server"));
+              //         return const Center(
+              //           child: Text("Error Loading Data"),
+              //         );
               //       }
               //     }
-              //     return Center(child: Text("Else Case"));
+              //     return const Center(
+              //       child: CircularProgressIndicator(),
+              //     );
               //   },
               // ),
+              
               Positioned(
-                  top: 10,
-                  child: CustomAppBar(
-                    context: context,
-                    constraints: constraints,
-                    disablePop: true,
-                    leadingActionIcon: const Icon(Icons.menu),
-                    scaffoldKey: _scaffoldKey,
-                  )),
+                top: 10,
+                child: CustomAppBar(
+                  context: context,
+                  constraints: constraints,
+                  disablePop: true,
+                  leadingActionIcon: const Icon(Icons.menu),
+                  scaffoldKey: _scaffoldKey,
+                ),
+              ),
             ],
           );
         }),

@@ -46,18 +46,39 @@ class ClubsController extends StateNotifier<List<Club>> {
         }
         return null;
       },
-      (events){
+      (clubs){
         if(AppConfig.devMode && context!=null){
           SnackBarService.showSnackBar(context: context, message: "Clubs loaded");
         }
-        if(events != null){
-          state = [...events];
+        if(clubs != null){
+          state = [...clubs];
         }
         _ref.read(isClubsFetchedProvider.notifier).update((state) => true,);
-        return events;
+        return clubs;
       },
     );
   }
   
+  Future<Club?> getClubById({required int clubId, BuildContext? context}) async{
+    final result = await _repo.getClubById(clubId: clubId);
+
+    return result.fold(
+      (failure){
+        if(AppConfig.devMode && context!=null){
+          SnackBarService.showSnackBar(context: context, message: "Clubs loading failed, Please try again later");
+        }
+        return null;
+      },
+      (clubs){
+        if(AppConfig.devMode && context!=null){
+          SnackBarService.showSnackBar(context: context, message: "Clubs loaded");
+        }
+        if(clubs == null && context != null){
+            SnackBarService.showSnackBar(context: context, message: "Error loading the club");
+        }
+        return clubs;
+      },
+    );
+  }
   
 }

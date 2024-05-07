@@ -20,54 +20,9 @@ class EventsRepo {
   final _name = "EVENT_CONTROLLER";
   EventsRepo({required api}) : _api = api;
 
-  final _events = [
-    // Event(
-    //   eventDate: DateTime.now().copyWith(hour: 18, minute: 15),
-    //   eventLength: const Duration(hours: 4),
-    //   eventName: "Follow up with the client",
-    //   priority: "High",
-    //   icon: {"icon":ImageAssets.kiNearestEventsActive,"color" :const Color(0xff3F8CFF)},
-    // ),
-    // Event(
-    //   eventDate: DateTime.now().copyWith(hour: 17, minute: 30).add(const Duration(days: 1)),
-    //   eventLength: const Duration(hours: 4),
-    //   eventName: "Meeting with Development Team",
-    //   priority: "High",
-    //   icon: {"icon":ImageAssets.kiNearestEventsMeeting,"color" :const Color(0xffFDC748)}
-    // ),
-    // Event(
-    //   eventDate: DateTime.now().copyWith(hour: 17,minute: 10),
-    //   eventLength: const Duration(hours: 2),
-    //   eventName: "Abhigyna Birthday",
-    //   priority: "Low",icon: {"icon":ImageAssets.kiNearestEventsBirthDay,"color" :const Color(0xffDE92EB)},
-    // ),
-    // Event(
-    //   eventDate: DateTime(2023,9,15),
-    //   eventLength: const Duration(hours: 3),
-    //   eventName: "Connecting new lead",
-    //   priority: "Low",
-    //   icon: {"icon" : ImageAssets.kiNearestEventsConnect,"color" :const Color(0xff6D5DD3)}
-    // ),
-  ];
-
-  Future<void> fetchEventsFromAPI() async {
-    // Populate state with items from api if not exist in state
-  }
-
-  // Future<List> getEvents() async {
-  //   // TODO: Make API Call and populate the _events List and also the state
-  //   // fetchEventsFromAPI();
-  //   return [..._events];
-  // }
-
-  // Future<void> addEvent(NearestEvents event) async{
-  //   // TODO: Make API Call to add Event
-  //   _events.add(event);
-  //   // state.add(event);
-  // }
-
-  Future<bool?> addEvent(Event event) async {
+  FutureEither<Event?> addEvent(Event event) async {
     final eventDate = event.eventDate.copyWith(hour:event.eventTime.hour,minute: event.eventTime.minute);
+    print(eventDate);
     final eventDateToSend = eventDate.toIso8601String().substring(0,19) + "Z";
     final eventModifiedOn = event.createdOn.toIso8601String().substring(0,19) + "Z";
     log("DATE TIME : ${eventDateToSend}");
@@ -86,17 +41,37 @@ class EventsRepo {
     
     return result.fold((Failure failure) {
       log(failure.message, name: _name);
-      return null;
+      return Left(failure);
+    }, (Response response) {
+      final data = jsonDecode(response.body);
+      print(data);
+      final recievedEvent = Event.fromMap(data['body']['data']);
+      if(data['status'] == true){
+        return Right(recievedEvent);
+      }
+      return const Right(null);
+    },);
+  }
+
+  FutureEither<bool?> enrollInEvent({required eventId, required studentId})async{
+    final body = {
+      "studentId" : studentId,
+    };
+    print("URL = ${"${EndPoints.enrollInEvent}$eventId"}");
+    final result = await _api.postRequest(url: "${EndPoints.enrollInEvent}$eventId",requireAuth: false,body: body);
+
+    return result.fold((Failure failure) {
+      log(failure.message,name: _name);
+      return Left(failure);
     }, (Response response) {
       final data = jsonDecode(response.body);
       if(data['status'] == true){
-        return true;
+        return const Right(true);
       }
-      return false;
+      return const Right(false);
     },);
-
-
-  }
+  } 
+  
 
   FutureEither<List<Event>?> getEvents() async {
     final result =

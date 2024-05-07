@@ -30,7 +30,7 @@ class _CalenderScreenState extends ConsumerState<CalendarScreen> {
   Map<DateTime, List<Event>>? selectedEvents;
 
   List<Event> _getDateEvents(DateTime datevalue) {
-    DateTime date = datevalue.toLocal();
+    DateTime date = datevalue;
     date = date.copyWith(
         hour: 0, minute: 0, second: 0, microsecond: 0, millisecond: 0);
     return selectedEvents![date] ?? [];
@@ -251,8 +251,7 @@ class _CalenderScreenState extends ConsumerState<CalendarScreen> {
                     ),
                     Container(
                         margin: const EdgeInsets.symmetric(horizontal: 15),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                         height: 300,
                         decoration: BoxDecoration(
                           color: Colors.white,
